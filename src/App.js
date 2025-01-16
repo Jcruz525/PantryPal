@@ -1,38 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Container, AppBar, Toolbar, Typography, Button, Avatar } from '@mui/material';
-import Inventory from './Inventory';
-import RecipeSuggestions from './RecipeSuggestions';
-import RecipeDetail from './RecipeDetail';
-import LandingPage from './LandingPage';
-import HomePage from './HomePage';
-import AboutUs from './AboutUs';
-import Login from './Login';
-import Register from './Register';
-import PrivateRoute from './PrivateRoute';
-import UserProfile from './UserProfile'; 
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Avatar,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import Inventory from "./Inventory";
+import RecipeSuggestions from "./RecipeSuggestions";
+import RecipeDetail from "./RecipeDetail";
+import LandingPage from "./LandingPage";
+import HomePage from "./HomePage";
+import AboutUs from "./AboutUs";
+import Login from "./Login";
+import Register from "./Register";
+import PrivateRoute from "./PrivateRoute";
+import UserProfile from "./UserProfile";
 
 function App() {
-  const [inventory, setInventory] = useState([]); 
-  const [nickname, setNickname] = useState('');
-  const [profileImg, setProfileImg] = useState('');
+  const [inventory, setInventory] = useState([]);
+  const [nickname, setNickname] = useState("");
+  const [profileImg, setProfileImg] = useState("");
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
-      setNickname(userData.nickname || '');
-      setProfileImg(userData.profileImg || '');
+      setNickname(userData.nickname || "");
+      setProfileImg(userData.profileImg || "");
     }
 
-    if (location.pathname === '/') {
-      document.body.style.background = "linear-gradient(to bottom, #FFFEFE 0%,#8CBAE8 45%, #1976D2 88%)";
+    if (location.pathname === "/") {
+      document.body.style.background =
+        "linear-gradient(to bottom, #FFFEFE 0%,#8CBAE8 45%, #1976D2 88%)";
     } else {
-      document.body.style.background = 'white';
+      document.body.style.background = "white";
     }
 
     return () => {
-      document.body.style.background = 'white';
+      document.body.style.background = "white";
     };
   }, [location]);
 
@@ -41,13 +52,23 @@ function App() {
   };
 
   const handleRemoveFromInventory = (ingredient) => {
-    setInventory((prevInventory) => prevInventory.filter((item) => item !== ingredient));
+    setInventory((prevInventory) =>
+      prevInventory.filter((item) => item !== ingredient)
+    );
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
   };
 
   return (
@@ -57,22 +78,31 @@ function App() {
           <img
             src="/PantryPalLogo.svg"
             alt="Pantry Pal Logo"
-            style={{ marginRight: '8px', marginLeft: '20px', cursor: 'pointer' }}
-            onClick={() => (window.location.href = '/')}
+            style={{
+              marginRight: "8px",
+              marginLeft: "20px",
+              cursor: "pointer",
+            }}
+            onClick={() => (window.location.href = "/")}
           />
           <Typography
             variant="h6"
-            sx={{ flexGrow: 1, cursor: 'pointer' }}
+            sx={{ flexGrow: 1, cursor: "pointer" }}
             component={Link}
             to="/"
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            style={{ textDecoration: "none", color: "inherit" }}
           >
             PantryPal
           </Typography>
           <Button color="inherit" component={Link} to="/home" sx={{ mr: 2 }}>
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/inventory" sx={{ mr: 2 }}>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/inventory"
+            sx={{ mr: 2 }}
+          >
             Pantry
           </Button>
           <Button color="inherit" component={Link} to="/recipes" sx={{ mr: 2 }}>
@@ -81,25 +111,101 @@ function App() {
           <Button color="inherit" component={Link} to="/about" sx={{ mr: 10 }}>
             About
           </Button>
-          <Button color="inherit" component={Link} to="/user-profile" sx={{ mr: 2 }}>
-            Profile
-          </Button>
-          <Button color="inherit" onClick={handleLogout}>Logout</Button>
 
-          {nickname && profileImg ? (
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
-              <Avatar src={profileImg} alt={nickname} sx={{ marginRight: '8px' }} />
+          {localStorage.getItem("user") ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginLeft: "10px",
+              }}
+            >
+              <Avatar
+                src={profileImg}
+                alt={nickname}
+                sx={{
+                  marginRight: "8px",
+                  cursor: "pointer",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.1)",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  },
+                }}
+                onClick={handleMenuOpen}
+              />
               <Typography variant="body1">{nickname}</Typography>
+
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    window.location.href = "/user-profile";
+                  }}
+                >
+                  User Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    alert("Settings coming soon!");
+                  }}
+                >
+                  Settings
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             </div>
-          ) : null}
+          ) : (
+            <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{ mr: 2 }}
+              >
+                Login
+              </Button>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/register"
+                sx={{ mr: 2 }}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
 
       <Container sx={{ mt: 0 }}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-          <Route path="/recipes" element={<RecipeSuggestions inventory={inventory} />} />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/recipes"
+            element={<RecipeSuggestions inventory={inventory} />}
+          />
           <Route
             path="/inventory"
             element={

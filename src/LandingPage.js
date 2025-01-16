@@ -130,7 +130,7 @@ const calculateDifficulty = (time) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/register")}
             sx={{
               padding: "10px 20px",
               fontSize: "16px",
