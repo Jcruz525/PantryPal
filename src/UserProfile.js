@@ -140,18 +140,6 @@ const UserProfile = () => {
       <Button variant="contained" color="primary" onClick={handleSaveProfile}>
         Save Profile
       </Button>
-      <Box sx={{ marginTop: "20px" }}>
-        <h3>Updated Profile:</h3>
-        <p>Email: {user?.email}</p>
-        <p>Nickname: {user?.nickname}</p>
-        <Avatar sx={{ width: 50, height: 50, marginBottom: "16px" }}>
-          <img
-            src={user?.profileImg}
-            alt="Updated Avatar"
-            style={{ width: "100%", height: "100%" }}
-          />
-        </Avatar>
-      </Box>
     </Box>
   );
 };
