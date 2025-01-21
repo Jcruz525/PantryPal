@@ -168,7 +168,8 @@ function App() {
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
-          ) : (
+          ) : location.pathname !== "/login" &&
+            location.pathname !== "/register" ? (
             <>
               <Button
                 color="inherit"
@@ -187,7 +188,7 @@ function App() {
                 Sign Up
               </Button>
             </>
-          )}
+          ) : null}
         </Toolbar>
       </AppBar>
 

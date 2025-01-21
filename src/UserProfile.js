@@ -1,20 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Grid, Box, Avatar } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Grid,
+  Box,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const icons = {
-  CheckCircle: "/path/to/check-circle-icon.png",
-  Face: "FaceStar.svg",
-  EmojiNature: "/path/to/emoji-nature-icon.png",
-  Person: "/path/to/person-icon.png",
-  Favorite: "/path/to/favorite-icon.png",
-  Star: "/path/to/star-icon.png",
+const ICONS = {
+  Soda: "sodaAvatar.png",
+  Fries: "fryAvatar.png",
+  Noodles: "noodleAvatar.png",
+  Pizza: "pizzaAvatar.png",
+  Rice: "riceAvatar.png",
+  Cupcake: "cupcakeAvatar.png",
+  Bread: "breadAvatar.png",
+  Broccoli: "broccoliAvatar.png",
+  Coffee: "coffeeAvatar.png",
+  Croissant: "crossAvatar.png",
+  Taco: "tacoAvatar.png",
+  Steak: "steakAvatar.png",
 };
 
 const UserProfile = () => {
   const [nickname, setNickname] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState(icons.Face);
+  const [selectedIcon, setSelectedIcon] = useState(ICONS.Face);
   const [email, setEmail] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
@@ -32,7 +45,7 @@ const UserProfile = () => {
           setUser(userData);
           setEmail(userData.email);
           setNickname(userData.nickname || "");
-          setSelectedIcon(userData.profileImg || icons.Face);
+          setSelectedIcon(userData.profileImg || ICONS.Face);
           setLoading(false);
         })
         .catch((error) => {
@@ -42,9 +55,7 @@ const UserProfile = () => {
     }
   }, [token]);
 
-  const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
-  };
+  const handleNicknameChange = (e) => setNickname(e.target.value);
 
   const handleSaveProfile = () => {
     const updatedProfile = { nickname, profileImg: selectedIcon };
@@ -65,24 +76,47 @@ const UserProfile = () => {
       });
   };
 
-  const handleSelectIcon = (icon) => {
-    setSelectedIcon(icon);
-  };
+  const handleSelectIcon = (icon) => setSelectedIcon(icon);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <Box sx={{ textAlign: "center" }}>
-      <h2>Edit Profile</h2>
-      <Avatar sx={{ width: 100, height: 100, marginBottom: "16px" }}>
-        <img
-          src={selectedIcon}
-          alt="Avatar"
-          style={{ width: "100%", height: "100%" }}
-        />
-      </Avatar>
+    <Box sx={{ maxWidth: 600, margin: "0 auto", padding: "16px" }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+        Edit Profile
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#1976D2",
+          borderRadius: "50px",
+          padding: "8px 20px",
+          marginBottom: "16px",
+        }}
+      >
+        <Avatar
+          sx={{
+            width: 64,
+            height: 64,
+            marginRight: "16px",
+            backgroundColor: "transparent",
+            imageRendering: "crisp-edges",
+          }}
+        >
+          <img
+            src={selectedIcon}
+            alt="Avatar"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </Avatar>
+        <Typography variant="h6" color="white" sx={{ fontWeight: 500 }}>
+          {nickname || "Enter your nickname"}
+        </Typography>
+      </Box>
       <TextField
         label="Email"
         variant="outlined"
@@ -101,14 +135,17 @@ const UserProfile = () => {
         fullWidth
         sx={{ marginBottom: "16px" }}
       />
+      <Typography variant="h6" sx={{ marginBottom: "8px" }}>
+        Select Profile Icon
+      </Typography>
       <Grid
         container
         spacing={2}
         justifyContent="center"
         sx={{ marginBottom: "16px" }}
       >
-        {Object.keys(icons).map((iconName, index) => {
-          const iconSrc = icons[iconName];
+        {Object.keys(ICONS).map((iconName, index) => {
+          const iconSrc = ICONS[iconName];
           return (
             <Grid item key={index} xs={2}>
               <Box
@@ -119,11 +156,13 @@ const UserProfile = () => {
                   padding: "8px",
                   border:
                     selectedIcon === iconSrc
-                      ? "2px solid #1976D2"
+                      ? "2px solid #fff"
                       : "1px solid #ddd",
                   borderRadius: "8px",
                   cursor: "pointer",
-                  backgroundColor: "#1976D2",
+                  backgroundColor:
+                    selectedIcon === iconSrc ? "#fff" : "transparent",
+                  transition: "background-color 0.3s, border-color 0.3s",
                 }}
                 onClick={() => handleSelectIcon(iconSrc)}
               >
@@ -137,7 +176,12 @@ const UserProfile = () => {
           );
         })}
       </Grid>
-      <Button variant="contained" color="primary" onClick={handleSaveProfile}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSaveProfile}
+        fullWidth
+      >
         Save Profile
       </Button>
     </Box>
